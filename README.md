@@ -2,6 +2,8 @@
 
 效果请访问：https://woodrose233.github.io/weather-forecast/weather
 
+测试版本，效果一般，请谅解
+
 ## 设计目标
 1. 双端适配
 2. UI自主设计
