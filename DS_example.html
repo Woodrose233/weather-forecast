@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>天气预报城市搜索</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            /* 将body,即内容主体设定为弹性盒子，以列为主轴。设定最小高度为屏幕高度，居中 */
+            background: linear-gradient(135deg, #1e5799, #207cca);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            place-items: center;
+            
+            padding: 20px;
+        }
+        
+        .container {
+            /* 容器类，限高最高800px，宽度占据整个父容器宽度，上外边距40px */
+            max-width: 800px;
+            width: 100%;
+            margin-top: 40px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .search-container {
+            /* 搜索栏的css样式，注意观察 */
+            display: flex;
+            /* 左右边距自动，上边距0，下边距20 */
+            margin: 0 auto 20px;
+            /* 最大宽度500px */
+            max-width: 500px;
+            /* 30px的圆角边框 */
+            border-radius: 30px;
+            /* 当信息超出搜索容器范围时，隐藏 */
+            overflow: hidden;
+            /* 设置阴影 */
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        #search-input {
+            /* 搜索栏输入，flex=1可以使所有子元素平均瓜分flex盒子 */
+            flex: 1;
+            /* 内边距，上下14，左右20 */
+            padding: 14px 20px;
+            font-size: 1.1rem;
+            /* 无内框线与外框线 */
+            border: none;
+            outline: none;
+        }
+        
+        #search-btn {
+            /* 搜索按钮 */
+            background: #FF9800;
+            color: white;
+            border: none;
+            padding: 0 25px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        #search-btn:hover {
+            /* 添加鼠标悬停事件（伪类选择器） */
+            background: #f57c00;
+        }
+        
+        .results {
+            /* 搜索结果的背景色 */
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            padding: 15px;
+            max-width: 500px;
+            margin: 0 auto;
+            display: none;
+            /* 毛玻璃效果 */
+            backdrop-filter: blur(10px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .city-item {
+            /* 单格搜索结果 */
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .city-item:hover {
+            /* 单格的伪元素选择器，hover效果 */
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .city-item:last-child {
+            /* 当项目为最后一个时，下边界为无 */
+            border-bottom: none;
+        }
+        
+        .weather-display {
+            /* 天气展示，主体。顶端设计了30px的外边距 */
+            margin-top: 30px;
+            /* 白色，透明 */
+            background: rgba(255, 255, 255, 0.15);
+            /* 圆形边框 */
+            border-radius: 15px;
+            padding: 25px;
+            /* 文字居中，无display属性，毛玻璃和投影 */
+            text-align: center;
+            display: none;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        /* 各类图标、小类的字体格式等 */
+        .weather-icon {
+            font-size: 5rem;
+            margin-bottom: 15px;
+        }
+        
+        .city-name {
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+        
+        .temperature {
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+        
+        .weather-description {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+        
+        .weather-details {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .detail-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .detail-value {
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+        
+        .tips {
+            text-align: center;
+            margin-top: 15px;
+            opacity: 0.8;
+        }
+        
+        footer {
+            margin-top: auto;
+            padding: 20px;
+            text-align: center;
+            opacity: 0.7;
+        }
+        /* 屏幕适配 */
+        @media (max-width: 600px) {
+            .weather-details {
+                gap: 15px;
+            }
+            
+            .temperature {
+                font-size: 2.5rem;
+            }
+            
+            .city-name {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- container将主体包裹 -->
+    <div class="container">
+        <!-- 标题/副标题 -->
+        <header>
+            <h1>全球天气预报</h1>
+            <p>搜索城市查看实时天气情况</p>
+        </header>
+        
+        <!-- 搜索功能模块，重点研究。由父容器、输入框、搜索按钮组成 -->
+        <div class="search-container">
+            <input type="text" 
+                   id="search-input" 
+                   placeholder="输入城市名称（北京、上海、纽约）">
+            <button id="search-btn">搜索</button>
+        </div>
+        
+        <div class="tips">(示例数据，模拟搜索功能)</div>
+        
+        <div id="results" class="results"></div>
+        
+        <!-- weather-display是天气卡片的父容器 -->
+        <div id="weather-display" class="weather-display">
+            <!-- 主要内容 -->
+            <div class="weather-icon">☀️</div>
+            <div class="city-name">北京</div>
+            <div class="temperature">25°C</div>
+            <div class="weather-description">晴天</div>
+            
+            <!-- 次要内容 -->
+            <div class="weather-details">
+                <div class="detail-item">
+                    <span class="detail-label">湿度</span>
+                    <span class="detail-value" id="humidity">45%</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">风速</span>
+                    <span class="detail-value" id="wind">10 km/h</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">气压</span>
+                    <span class="detail-value" id="pressure">1013 hPa</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 页脚 -->
+    <footer>
+        <p>初级 JavaScript 天气搜索演示 | 适合初学者的项目</p>
+    </footer>
+
+    <script>
+        // 模拟城市数据
+        const cities = [
+            {name: "北京", temp: 25, humidity: 45, wind: 10, pressure: 1013, desc: "晴天", icon: "☀️"},
+            {name: "上海", temp: 28, humidity: 70, wind: 15, pressure: 1005, desc: "多云", icon: "⛅"},
+            {name: "上水", temp: 28, humidity: 70, wind: 15, pressure: 1005, desc: "多云", icon: "⛅"},
+            {name: "上每", temp: 28, humidity: 70, wind: 15, pressure: 1005, desc: "多云", icon: "⛅"},
+            {name: "上湖", temp: 28, humidity: 70, wind: 15, pressure: 1005, desc: "多云", icon: "⛅"},
+            {name: "广州", temp: 32, humidity: 65, wind: 8, pressure: 1008, desc: "晴朗", icon: "☀️"},
+            {name: "深圳", temp: 31, humidity: 68, wind: 12, pressure: 1010, desc: "部分多云", icon: "🌤️"},
+            {name: "杭州", temp: 26, humidity: 60, wind: 10, pressure: 1012, desc: "阵雨", icon: "🌦️"},
+            {name: "成都", temp: 22, humidity: 75, wind: 5, pressure: 1014, desc: "小雨", icon: "🌧️"},
+            {name: "重庆", temp: 29, humidity: 80, wind: 6, pressure: 1009, desc: "大雾", icon: "🌫️"},
+            {name: "武汉", temp: 27, humidity: 62, wind: 7, pressure: 1011, desc: "晴间多云", icon: "🌤️"},
+            {name: "纽约", temp: 20, humidity: 50, wind: 20, pressure: 1003, desc: "小雨", icon: "🌧️"},
+            {name: "伦敦", temp: 18, humidity: 58, wind: 25, pressure: 1008, desc: "阴天", icon: "☁️"},
+            {name: "东京", temp: 24, humidity: 55, wind: 12, pressure: 1007, desc: "晴朗", icon: "☀️"},
+            {name: "巴黎", temp: 19, humidity: 53, wind: 15, pressure: 1010, desc: "部分多云", icon: "⛅"}
+        ];
+        
+        // 获取DOM元素 搜索框输入、搜索按钮、搜索结果、天气展示（这些都是需要获取数据或者频繁修改的元素）
+        const searchInput = document.getElementById('search-input');
+        const searchBtn = document.getElementById('search-btn');
+        const resultsDiv = document.getElementById('results');
+        const weatherDisplay = document.getElementById('weather-display');
+        
+        // 搜索按钮点击事件
+        searchBtn.addEventListener('click', function() {
+            performSearch();
+        });
+        
+        // 输入框回车事件
+        searchInput.addEventListener('keyup', function(e) {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+        
+        // 执行搜索
+        function performSearch() {
+            const searchTerm = searchInput.value.trim().toLowerCase();
+            
+            if (!searchTerm) {
+                resultsDiv.style.display = 'none';
+                weatherDisplay.style.display = 'none';
+                return;
+            }
+            
+            // 过滤匹配的城市，filter是array特有的函数，内部调用一个函数作为判断依据，所有为true的元素返回一个新的数组
+            const matchedCities = cities.filter(city => 
+                city.name.toLowerCase().includes(searchTerm)
+            );
+            
+            displayResults(matchedCities);
+        }
+        
+        // 显示搜索结果
+        function displayResults(results) {
+            // 首先新建一个空HTML
+            resultsDiv.innerHTML = '';
+            // 如果搜索无结果，返回提示，隐藏天气卡片
+            if (results.length === 0) {
+                resultsDiv.innerHTML = '<div class="city-item">未找到匹配的城市</div>';
+                resultsDiv.style.display = 'block';
+                weatherDisplay.style.display = 'none';
+                return;
+            }
+            
+            // 显示匹配结果
+            results.forEach(city => {
+                const cityElement = document.createElement('div');
+                cityElement.className = 'city-item';
+                cityElement.textContent = city.name;
+                
+                // 点击城市显示天气
+                cityElement.addEventListener('click', function() {
+                    displayWeather(city);
+                });
+                
+                resultsDiv.appendChild(cityElement);
+            });
+            
+            resultsDiv.style.display = 'block';
+        }
+        
+        // 显示天气信息
+        function displayWeather(city) {
+            document.querySelector('.city-name').textContent = city.name;
+            document.querySelector('.temperature').textContent = `${city.temp}°C`;
+            document.querySelector('.weather-description').textContent = city.desc;
+            document.querySelector('.weather-icon').textContent = city.icon;
+            document.getElementById('humidity').textContent = `${city.humidity}%`;
+            document.getElementById('wind').textContent = `${city.wind} km/h`;
+            document.getElementById('pressure').textContent = `${city.pressure} hPa`;
+            
+            // 显示天气面板并隐藏结果列表
+            weatherDisplay.style.display = 'block';
+            resultsDiv.style.display = 'none';
+            
+            // 清空搜索框
+            searchInput.value = '';
+            searchInput.focus();
+        }
+        
+        // 页面加载时默认显示北京的天气
+        window.addEventListener('load', function() {
+            displayWeather(cities[0]);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>天气预报</title>
+</head>
+<body>
+    <div class="search-overlay">
+        <div class="search-window">
+            <div class="search-header">
+                <h1>获取城市</h1>
+                <button class="close-btn">&times;</button>
+            </div>
+            <div class="mainblock-search">
+                <button class="locate-btn">定位📍</button>
+                <input type="text" class="search-input" placeholder="输入城市名或点击定位按钮">
+            </div>
+            <div class="search-results"></div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="city">未知城市</div>
+
+        <div class="grid_main">
+            <div class="current_temp">35<div class="centi">℃</div></div>
+            <div class="grid_centigrade_icon">
+                <img class="cell main_icon" src="#" alt="天气">
+                <div class="cell centi">未知天气</div>
+            </div>
+        </div>
+
+        <div class="grid_high_low">
+            <div class="cell">最高：</div>
+            <div class="cell">36℃</div>
+            <div class="cell">最低：</div>
+            <div class="cell">29℃</div>
+        </div>
+        
+        <div class="grid_temp_humi">
+            <div class="cell">未知</div>
+            <div class="cell">未知</div>
+            <div class="cell">未知</div>
+
+            <div class="cell">湿度</div>
+            <div class="cell">风速</div>
+            <div class="cell">风向</div>
+        </div>
+        <div class="grid_recommend">
+            <img src="#" alt="穿衣" class="cell">
+            <img src="#" alt="洗车" class="cell">
+            <img src="#" alt="出行" class="cell">
+            <img src="#" alt="运动" class="cell">
+            <div class="cell">推荐信息</div>
+            <div class="cell">推荐信息</div>
+            <div class="cell">推荐信息</div>
+            <div class="cell">推荐信息</div>
+        </div>
+        <div class="grid_forecast">
+            <div class="date cell">xxxx/xx/xx</div>
+            <img src="#" alt="天气" class="sub_icon cell">
+            <div class="cell">xx℃</div>
+            <div class="cell">xx℃</div>
+        </div>
+    </div>
+</body>
+<link rel="stylesheet" href="CSS\style.CSS">
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.mini.min.js"></script>
+<script src="JS\WeatherDemo.js"></script>
+
+</html>
