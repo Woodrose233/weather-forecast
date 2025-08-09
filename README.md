@@ -1,6 +1,6 @@
 # 项目：设计天气预报网页
 
-效果请访问：https://woodrose233.github.io/weather-forecast/weather
+效果请访问：[天气预报](https://woodrose233.github.io/weather-forecast/weather)
 
 测试版本，效果一般，请谅解
 
