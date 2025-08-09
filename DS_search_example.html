@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>简洁可关闭搜索窗口</title>
+    <style>
+        /* 基础样式 - 仅包含必要样式 */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+            background-color: #f0f0f0;
+        }
+        
+        /* 主容器样式 */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        /* 搜索按钮样式 */
+        .search-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        /* 搜索窗口覆盖层 - 全屏遮罩 */
+        .search-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7); /* 半透明黑色背景 */
+            display: none; /* 默认隐藏 */
+            justify-content: center;
+            align-items: center;
+            z-index: 1000; /* 确保在最上层 */
+        }
+        
+        /* 搜索窗口样式 */
+        .search-window {
+            background: white;
+            width: 90%;
+            max-width: 600px;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+        
+        /* 搜索窗口头部样式 */
+        .search-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        /* 搜索输入框样式 */
+        .search-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            box-sizing: border-box; /* 确保边框不会增加总宽度 */
+        }
+        
+        /* 关闭按钮样式 */
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #777;
+        }
+        
+        /* 搜索结果区域样式 */
+        .search-results {
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        /* 搜索结果项样式 */
+        .result-item {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        /* 无结果提示样式 */
+        .no-results {
+            padding: 20px;
+            text-align: center;
+            color: #777;
+        }
+        
+        /* 响应式设计 - 小屏幕适配 */
+        @media (max-width: 600px) {
+            .search-window {
+                width: 95%;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>简洁可关闭搜索窗口演示</h1>
+        <p>这是一个简洁的搜索窗口实现，适合新手学习。点击下方按钮打开搜索窗口。</p>
+        
+        <button class="search-btn" id="open-search">打开搜索窗口</button>
+        
+        <p>其他页面内容...</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisi. Proin eget leo at sapien tincidunt consequat.</p>
+        <p>Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Duis varius ullamcorper eros.</p>
+    </div>
+    
+    <!-- 搜索窗口覆盖层 -->
+    <div class="search-overlay" id="search-overlay">
+        <div class="search-window">
+            <div class="search-header">
+                <h2>搜索内容</h2>
+                <!-- 关闭按钮 -->
+                <button class="close-btn" id="close-search">&times;</button>
+            </div>
+            
+            <!-- 搜索输入框 -->
+            <input 
+                type="text" 
+                class="search-input" 
+                id="search-input" 
+                placeholder="输入关键词搜索..."
+            >
+            
+            <!-- 搜索结果容器 -->
+            <div class="search-results" id="search-results">
+                <div class="no-results">请输入搜索关键词</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 获取DOM元素
+        const openSearchBtn = document.getElementById('open-search');
+        const closeSearchBtn = document.getElementById('close-search');
+        const searchOverlay = document.getElementById('search-overlay');
+        const searchInput = document.getElementById('search-input');
+        const searchResults = document.getElementById('search-results');
+        
+        // 打开搜索窗口的函数
+        function openSearch() {
+            // 显示搜索覆盖层
+            searchOverlay.style.display = 'flex';
+            
+            // 聚焦到搜索输入框
+            setTimeout(() => {
+                searchInput.focus();
+            }, 100);
+        }
+        
+        // 关闭搜索窗口的函数
+        function closeSearch() {
+            // 隐藏搜索覆盖层
+            searchOverlay.style.display = 'none';
+            
+            // 清空搜索输入和结果
+            searchInput.value = '';
+            searchResults.innerHTML = '<div class="no-results">请输入搜索关键词</div>';
+        }
+        
+        // 执行搜索的函数
+        function performSearch() {
+            const searchTerm = searchInput.value.trim().toLowerCase();
+            
+            // 如果没有输入关键词
+            if (searchTerm === '') {
+                searchResults.innerHTML = '<div class="no-results">请输入搜索关键词</div>';
+                return;
+            }
+            
+            // 模拟搜索结果 - 实际应用中这里应该从服务器获取真实数据
+            const mockResults = [
+                { id: 1, title: "搜索结果 1", content: `这是关于"${searchTerm}"的第一个结果` },
+                { id: 2, title: "搜索结果 2", content: `这是关于"${searchTerm}"的第二个结果` },
+                { id: 3, title: "搜索结果 3", content: `这是关于"${searchTerm}"的第三个结果` }
+            ];
+            
+            // 清空搜索结果容器
+            searchResults.innerHTML = '';
+            
+            // 如果没有搜索结果
+            if (mockResults.length === 0) {
+                searchResults.innerHTML = '<div class="no-results">没有找到匹配的结果</div>';
+                return;
+            }
+            
+            // 添加搜索结果到页面
+            mockResults.forEach(result => {
+                const resultElement = document.createElement('div');
+                resultElement.className = 'result-item';
+                resultElement.innerHTML = `
+                    <h3>${result.title}</h3>
+                    <p>${result.content}</p>
+                `;
+                searchResults.appendChild(resultElement);
+            });
+        }
+        
+        // 事件监听器 - 打开搜索窗口
+        openSearchBtn.addEventListener('click', openSearch);
+        
+        // 事件监听器 - 关闭搜索窗口
+        closeSearchBtn.addEventListener('click', closeSearch);
+        
+        // 事件监听器 - 在搜索输入时执行搜索
+        searchInput.addEventListener('input', performSearch);
+        
+        // 事件监听器 - 按ESC键关闭搜索窗口
+        document.addEventListener('keydown', function(e) {
+            // 检查搜索窗口是否打开且按下了ESC键
+            if (searchOverlay.style.display === 'flex' && e.key === 'Escape') {
+                closeSearch();
+            }
+        });
+        
+        // 事件监听器 - 点击覆盖层关闭搜索窗口
+        searchOverlay.addEventListener('click', function(e) {
+            // 检查点击的是否是覆盖层本身（不是子元素）
+            if (e.target === searchOverlay) {
+                closeSearch();
+            }
+        });
+    </script>
+</body>
+</html>

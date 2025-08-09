@@ -1,0 +1,224 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body{
+    background: linear-gradient(45deg,rgb(65, 167, 235),rgb(34, 112, 168));
+    color: white;
+}
+/* flex容器排列规则、宽度、颜色 */
+.container {
+    display: flex;
+    width: 100%;
+    background: linear-gradient(135deg,rgb(51, 124, 173),rgb(19, 159, 219));
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    align-items: center;
+    align-content: space-evenly;
+}
+/* 容器子元素边界 */
+.container > div {
+    margin: auto;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    transition: transform 0.3s ease;
+}
+.container > div:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
+/* 城市卡片 */
+.city{
+    font-size: 3rem;
+    display: grid;
+    width: 24rem;
+    height: 12rem;
+    place-items: center;
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.city:hover{
+    cursor: pointer;
+}
+
+/* 当前天气卡片 */
+.grid_main{
+    display: grid;
+    place-items: center;
+    grid:auto / auto auto;
+    background-color: rgba(255, 255, 255, 0.2);
+    width: 24rem;
+    height: 12rem;
+}
+.current_temp {
+    font-size: 6rem;
+    font-weight: 100;
+}
+.centi{
+    display: grid inline;
+    place-items: top;
+    font-size: 2rem;
+}
+.grid_centigrade_icon {
+    display: grid;
+    grid: auto / auto;
+    place-items: center;
+}
+.grid_centigrade_icon > div {
+    font-size: 1rem;
+
+}
+/* .grid_high_low {
+    display: grid;
+    place-items: center;
+    width: 24rem;
+    height: 12rem;
+    background-color: rgba(255, 255, 255, 0.2);
+} */
+.grid_high_low {
+    font-size: 2rem;
+    font-weight: 256;
+    width: 24rem;
+    height: 12rem;
+    background-color: rgba(255, 255, 255, 0.2);
+    display: grid;
+    place-items: center;
+    grid: 6rem / auto auto;
+
+}
+.grid_temp_humi {
+    font-size: 1.5rem;
+    font-weight: 256;
+    width: 24rem;
+    height: 12rem;
+    background-color: rgba(255, 255, 255, 0.2);
+    display: grid;
+    place-items: center;
+    grid: 6rem / auto auto auto;
+
+}
+.grid_recommend {
+    width: 24rem;
+    height: 12rem;
+    background-color: rgba(255, 255, 255, 0.2);
+    display: grid;
+    place-items: center;
+    grid: 6rem / auto auto auto auto;
+
+}
+.grid_forecast{
+    width: 24rem;
+    height: 12rem;
+    background-color: rgba(255, 255, 255, 0.2);
+    display: grid;
+    place-items: center;
+    grid: 6rem / auto auto;
+
+}
+
+/* 搜索界面设计 */
+
+.search-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7); /* 半透明黑色背景 */
+    display: none; /* 默认隐藏 */
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* 确保在最上层 */
+}
+
+.search-window {
+    position: fixed;
+    width: 60%;
+    height: 50%;
+    border-radius: 20px;
+    padding: 30px;
+    background: rgb(255, 255, 255);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* 确保在最上层 */
+}
+.search-header {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+h1 {
+    color: gray;
+    display: inline;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 40px;
+    cursor: pointer;
+    color: #777;
+    transition: transform 0.3s ease;
+}
+.close-btn:hover {
+    transform:rotate(-90deg);
+}
+
+.mainblock-search {
+    display: flex;
+    justify-content:center;
+}
+
+.locate-btn {
+    width: 10%;
+    background: none;
+    border: none;
+    font-size: 15px;
+    cursor: pointer;
+    color: #777;
+    transition: transform 0.3s ease;
+}
+.locate-btn:hover {
+    transform:translateY(-3px);
+    text-shadow: 0 5px 15px rgba(234, 255, 0, 0.785);
+}
+
+.search-input {
+            width: 90%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            box-sizing: border-box; /* 确保边框不会增加总宽度 */
+        }
+
+.mainblock-search > *{
+    display: inline-block;
+}
+
+/* 搜索结果的CSS设置，直接抄袭大D老师 */
+.search-results {
+    margin-top: 20px;
+    max-height: 130px;
+    overflow-y: auto;
+}
+.result-item {
+    color: #777;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+}
+.result-item:hover {
+    background-color: #eee;
+}
+.no-results {
+    padding: 20px;
+    text-align: center;
+    color: #777;
+}
+

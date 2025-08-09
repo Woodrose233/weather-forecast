@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>搜索测试</title>
+</head>
+<body>
+    <input id="inputtext" type="text">
+    <input id="button1" type="button" value="按钮">
+</body>
+<script>
+    const inputtext = document.getElementById('inputtext');
+    const button1 = document.getElementById("button1");
+
+    console.log(inputtext);
+    button1.addEventListener('click',function(){
+        printtext();});
+    function printtext() {
+        console.log(inputtext.value);
+    }
+</script>
+</html>
