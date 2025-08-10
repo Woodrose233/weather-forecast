@@ -64,7 +64,7 @@
 
 截至目前，基本上完成了天气预报的主体设计。
 
-![alt text](noteImages\note2_web_example.png)
+![alt text](noteImages/note2_web_example_reup.png)
 
 目前需要完善的是：
 + 定位搜索的实现
