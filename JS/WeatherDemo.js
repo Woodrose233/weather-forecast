@@ -31,6 +31,7 @@ function performSearch() {
         searchInput.placeholder = '请输入搜索关键词';
         return;
     }
+    // 为每一个搜索结果添加触发器
     cityMatch(searchInput.value.trim().toLowerCase()).then(matchedCities=>{
         matchedCities.forEach(city=>{
             const resultElement = document.createElement('div');
@@ -42,6 +43,7 @@ function performSearch() {
     })
 }
 
+// 该函数用于从api处获取更新，并且更新网页
 function weatherGetter(item) {
     let city = item.innerHTML;
     closeSearch();
@@ -52,6 +54,7 @@ function weatherGetter(item) {
             'https://restapi.amap.com/v3/weather/weatherInfo?city='+code+'&extensions=all&key=743825297c9d0da6e7188252624e80ac']
         return apis;
     }).then(apis => {
+        // 通过两次搜索api，获取全部信息（0为实时，1为预报）
         fetch(apis[0])
         .then(response => response.json())
         .then(data => {
@@ -141,6 +144,8 @@ async function loadExcelFile() {
         throw error;
     }
 }
+
+
 
 // 调用函数加载Excel
 function getCityTable() {
