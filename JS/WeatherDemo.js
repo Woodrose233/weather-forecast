@@ -7,12 +7,14 @@ const mainCard = document.getElementsByClassName('grid_main')[0];
 const subCard = document.getElementsByClassName('grid_temp_humi')[0];
 const tempRangeCard = document.getElementsByClassName('grid_high_low')[0];
 const container = document.getElementsByClassName('container')[0];
+const locate_btn = document.getElementsByClassName('locate-btn')[0];
 
 console.log(searchResults);
 
 city_and_search.addEventListener('click',openSearch);
 close_btn.addEventListener('click',closeSearch);
 searchInput.addEventListener('input', performSearch);
+locate_btn.addEventListener('click',locationToUpdate);
 
 function openSearch() {
     overlay.style.display = 'flex';
@@ -45,12 +47,18 @@ function performSearch() {
 
 // 该函数用于从api处获取更新，并且更新网页
 function weatherGetter(item) {
-    let city = item.innerHTML;
+    let city = '';
+    if(item.innerHTML){
+        city = item.innerHTML;
+    }
+    else {
+        city = item;
+    }
     closeSearch();
     city_and_search.innerHTML = city;
     cityMatch(city).then(cities=>{
-        code = cities[0][1];
-        apis = ['https://restapi.amap.com/v3/weather/weatherInfo?city='+code+'&key=743825297c9d0da6e7188252624e80ac',
+        let code = cities[0][1];
+        let apis = ['https://restapi.amap.com/v3/weather/weatherInfo?city='+code+'&key=743825297c9d0da6e7188252624e80ac',
             'https://restapi.amap.com/v3/weather/weatherInfo?city='+code+'&extensions=all&key=743825297c9d0da6e7188252624e80ac']
         return apis;
     }).then(apis => {
@@ -127,6 +135,28 @@ function iconGetter(name) {
     }
 }
 
+// 定位函数，该函数用于获取经纬度信息，需要调用GPS
+function getLocation(){
+    return new Promise((resolve, reject) => {
+    navigator.geolocation.getCurrentPosition(
+      position => resolve(position.toJSON()),
+      error => reject(error)
+    );
+  });
+}
+
+function locationToUpdate() {
+    getLocation()
+    .then(data => {
+        let api = 'https://restapi.amap.com/v3/geocode/regeo?location='+data.coords.longitude.toFixed(6)+','+data.coords.latitude.toFixed(6)+'&key=743825297c9d0da6e7188252624e80ac';
+        fetch(api).then(response => response.json())
+        .then(data => {
+            weatherGetter(data.regeocode.addressComponent.district);
+        });
+    })
+    .catch(error =>console.error("定位失败",error))
+}
+
 async function loadExcelFile() {
     try {
         const url = "assets/AMap_adcode_citycode.xlsx";
@@ -144,8 +174,6 @@ async function loadExcelFile() {
         throw error;
     }
 }
-
-
 
 // 调用函数加载Excel
 function getCityTable() {

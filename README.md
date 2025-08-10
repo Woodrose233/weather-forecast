@@ -76,3 +76,15 @@
 **2025/8/10**
 
 开始完善定位函数
+
+高德逆地理编码api使用规则：
+
+URL:https://restapi.amap.com/v3/geocode/regeo?parameters
+
+![alt text](noteImages/note3_location.png)
+
+**2025/8/10 17:25**
+
+完成了定位并自动获取城市，更新天气的功能
+
+接下来完善推荐信息、补充图标，并优化适配即可
